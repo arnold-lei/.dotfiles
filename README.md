@@ -19,22 +19,62 @@ sudo pacman -S stow
 
 ## Installation
 
+### Quick Install (All Packages)
+
+```bash
+# Clone with submodules
+git clone --recurse-submodules git@github.com:arnold-lei/.dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+
+# Stow all packages
+stow */
+```
+
+### Step-by-Step Install
+
 1. Clone this repository to your home directory:
 
 ```bash
-git clone <your-repo-url> ~/.dotfiles
+git clone git@github.com:arnold-lei/.dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ```
 
-2. Stow the packages you want:
+2. Initialize and update git submodules (required for nvim config):
+
+```bash
+git submodule update --init --recursive
+```
+
+3. Stow the packages you want:
 
 ```bash
 # Install zsh configuration
 stow zsh
 
+# Install nvim configuration
+stow nvim
+
+# Install tmux configuration
+stow tmux
+
+# Install custom scripts
+stow scripts
+
 # Install all packages at once
 stow */
 ```
+
+### First Time Setup Notes
+
+- **Backup existing configs**: Before stowing, backup any existing dotfiles
+  ```bash
+  mv ~/.zshrc ~/.zshrc.backup
+  mv ~/.config/nvim ~/.config/nvim.backup
+  mv ~/.tmux.conf ~/.tmux.conf.backup
+  mv ~/.local/bin ~/.local/bin.backup  # If you have existing scripts
+  ```
+
+- **Handle conflicts**: If stow reports conflicts, move or backup the existing files first
 
 ## Usage
 
@@ -109,6 +149,11 @@ For nested configs like `~/.config/nvim/init.vim`:
 ## Packages
 
 - **zsh**: Zsh configuration with oh-my-zsh and powerlevel10k
+- **nvim**: Neovim configuration (git submodule from [kickstart.nvim](https://github.com/arnold-lei/kickstart.nvim))
+- **tmux**: Tmux configuration with custom keybindings and layouts
+- **scripts**: Custom shell scripts in `~/.local/bin`
+  - `open-git.sh`: Opens the current git repository in the browser
+  - `tmux-sessionizer`: Quick tmux session switcher with fzf
 
 ## Adding New Dotfiles
 
@@ -141,8 +186,40 @@ If the symlink points to the wrong place:
 stow -R <package-name>
 ```
 
+## Working with Git Submodules
+
+This repository uses git submodules for some configurations (like nvim). Here are common operations:
+
+### Updating Submodules
+
+To pull the latest changes from all submodules:
+
+```bash
+git submodule update --remote --merge
+```
+
+To update a specific submodule:
+
+```bash
+cd nvim/.config/nvim
+git pull origin main
+cd ../../..
+git add nvim/.config/nvim
+git commit -m "Update nvim submodule"
+```
+
+### After Cloning on a New Machine
+
+If you cloned without `--recurse-submodules`:
+
+```bash
+cd ~/.dotfiles
+git submodule update --init --recursive
+```
+
 ## Notes
 
 - **Sensitive files**: This repo has a `.gitignore` to prevent committing sensitive files like API keys
 - **Machine-specific configs**: Consider using separate branches or conditional logic for different machines
+- **Submodules**: The nvim config is maintained as a separate repository and included as a submodule
 - Always backup your dotfiles before stowing for the first time
