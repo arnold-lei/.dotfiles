@@ -1,0 +1,20 @@
+# Sensitive files - DO NOT commit
+.gitconfig
+.npmrc
+.claude.json
+.aws/
+.ssh/
+
+# Backup files
+*.backup
+*~
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local overrides
+*_LOCAL
+*.local
